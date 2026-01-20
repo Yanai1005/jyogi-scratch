@@ -4,22 +4,12 @@ layout: home
 
 hero:
   name: "講座資料"
-  text: "講座資料"
-  tagline: My great project tagline
+  text: "プログラミングを楽しく学ぼう"
+  tagline: ゲーム制作を通じてプログラミングの基礎を身につけよう
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Scratch講座を始める
+      link: /games/scratch/
 
-features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
 

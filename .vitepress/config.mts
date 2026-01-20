@@ -7,22 +7,18 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'ホーム', link: '/' },
+      { text: 'Scratch講座', link: '/games/scratch/' },
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: 'Scratchゲーム',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: '講座トップ', link: '/games/scratch/' },
+          { text: 'モグラ叩きゲーム', link: '/games/scratch/mogura-tataki' }
         ]
       }
     ],
-
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
   }
 })
