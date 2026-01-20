@@ -9,6 +9,7 @@ export default defineConfig({
     nav: [
       { text: 'ホーム', link: '/' },
       { text: 'Scratch講座', link: '/games/scratch/' },
+      { text: 'JavaScript講座', link: '/games/javascript/' }
     ],
 
     sidebar: [
@@ -17,6 +18,13 @@ export default defineConfig({
         items: [
           { text: '講座トップ', link: '/games/scratch/' },
           { text: 'モグラ叩きゲーム', link: '/games/scratch/mogura-tataki' }
+        ]
+      },
+      {
+        text: 'JavaScriptゲーム',
+        items: [
+          { text: '講座トップ', link: '/games/javascript/' },
+          { text: 'モグラ叩きゲーム', link: '/games/javascript/mogura-tataki' }
         ]
       }
     ],
