@@ -6,6 +6,13 @@
 > - [CSSの基礎](./basics-css.md)
 > - [JavaScriptの基礎](./basics-javascript.md)
 
+> [!TIP]
+> **完成したゲームで遊んでみよう！**
+> 
+> <a href="/mogura-tataki-demo.html" target="_blank">🎮 デモページでゲームを遊ぶ（新しいタブで開く）</a>
+> 
+> 実際に遊んでみて、どんなゲームを作るのか確認してから始めましょう！
+
 ---
 
 ## 今回作るゲーム

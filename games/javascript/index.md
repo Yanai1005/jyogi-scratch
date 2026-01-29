@@ -37,6 +37,7 @@ Scratchで学んだプログラミングの考え方を、本物のプログラ�
 - 30秒間でモグラを叩くゲーム
 - HTML、CSS、JavaScriptを全部使います
 - Scratchで作ったゲームと同じものを作ります
+- <a href="/mogura-tataki-demo.html" target="_blank">🎮 完成したゲームで遊んでみる（新しいタブで開く）</a>
 
 ---
 

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>モグラ叩きゲーム - デモ</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 2.5em;
+    }
+
+    .game-info {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .info-item {
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    .info-item label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .info-item span {
+      font-size: 1.5em;
+      color: #667eea;
+      font-weight: bold;
+      margin: 0 5px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #764ba2;
+    }
+
+    .btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .game-area {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(180deg, #87ceeb 0%, #e0f6ff 100%);
+      border: 3px solid #333;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .mole {
+      position: absolute;
+      width: 60px;
+      height: 70px;
+      background: #8b4513;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2em;
+      transition: transform 0.1s;
+      border: 2px solid #654321;
+    }
+
+    .mole::before,
+    .mole::after {
+      content: '●';
+      position: absolute;
+      font-size: 0.4em;
+      color: black;
+    }
+
+    .mole::before {
+      left: 15px;
+      top: 15px;
+    }
+
+    .mole::after {
+      right: 15px;
+      top: 15px;
+    }
+
+    .mole:hover {
+      transform: scale(1.1);
+    }
+
+    .mole.hit {
+      animation: hit 0.3s ease;
+    }
+
+    @keyframes hit {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(0.8);
+        opacity: 0.7;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    .game-over-message {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+
+    .modal p {
+      color: #667eea;
+      font-size: 1.5em;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    .modal button {
+      padding: 12px 30px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .modal button:hover {
+      background: #764ba2;
+    }
+
+    .back-links {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+    }
+
+    .back-links p {
+      color: #666;
+      margin-bottom: 15px;
+      font-size: 0.9em;
+    }
+
+    .back-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      background: #f0f0f0;
+      color: #333;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #e0e0e0;
+    }
+
+    .back-btn.primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .back-btn.primary:hover {
+      background: #764ba2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>モグラ叩きゲーム</h1>
+    
+    <div class="game-info">
+      <div class="info-item">
+        <label>スコア:</label>
+        <span id="score">0</span>
+      </div>
+      <div class="info-item">
+        <label>残り時間:</label>
+        <span id="time">30</span>秒
+      </div>
+      <button id="startBtn" class="btn">ゲーム開始</button>
+      <button id="resetBtn" class="btn">リセット</button>
+    </div>
+
+    <div id="gameArea" class="game-area">
+      <!-- モグラが動的に生成される -->
+    </div>
+
+    <div id="gameOverMessage" class="game-over-message" style="display: none;">
+      <div class="modal">
+        <h2>ゲーム終了!</h2>
+        <p id="finalScore"></p>
+        <button onclick="location.reload()">もう一度プレイ</button>
+      </div>
+    </div>
+
+    <div class="back-links">
+      <p>このゲームの作り方を学びたい方は:</p>
+      <a href="/games/javascript/mogura-tataki.html" class="back-btn primary">📚 チュートリアルを見る</a>
+      <a href="/games/javascript/" class="back-btn">🏠 JavaScript講座トップへ</a>
+    </div>
+  </div>
+
+  <script>
+    // ゲームの情報を保存する変数
+    let score = 0;
+    let time = 30;
+    let isGameRunning = false;
+    let gameTimer = null;
+
+    // HTMLの部品を取得
+    const scoreDisplay = document.getElementById('score');
+    const timeDisplay = document.getElementById('time');
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const gameArea = document.getElementById('gameArea');
+    const gameOverMessage = document.getElementById('gameOverMessage');
+    const finalScore = document.getElementById('finalScore');
+
+    // ゲームを始める関数
+    function startGame() {
+      score = 0;
+      time = 30;
+      isGameRunning = true;
+      
+      scoreDisplay.textContent = '0';
+      timeDisplay.textContent = '30';
+      startBtn.disabled = true;
+      gameArea.innerHTML = '';
+      gameOverMessage.style.display = 'none';
+
+      gameTimer = setInterval(updateTimer, 1000);
+      spawnMoles();
+    }
+
+    // タイマーを更新する関数
+    function updateTimer() {
+      time = time - 1;
+      timeDisplay.textContent = time;
+
+      if (time <= 0) {
+        endGame();
+      }
+    }
+
+    // ゲームを終了する関数
+    function endGame() {
+      isGameRunning = false;
+      clearInterval(gameTimer);
+      startBtn.disabled = false;
+
+      const allMoles = document.querySelectorAll('.mole');
+      allMoles.forEach(function(mole) {
+        mole.remove();
+      });
+
+      finalScore.textContent = '最終スコア: ' + score + '点';
+      gameOverMessage.style.display = 'flex';
+    }
+
+    // ゲームをリセットする関数
+    function resetGame() {
+      if (isGameRunning) {
+        endGame();
+      }
+      score = 0;
+      time = 30;
+      scoreDisplay.textContent = '0';
+      timeDisplay.textContent = '30';
+      startBtn.disabled = false;
+      gameArea.innerHTML = '';
+      gameOverMessage.style.display = 'none';
+    }
+
+    // モグラを出す関数
+    function spawnMoles() {
+      if (!isGameRunning) return;
+
+      const moleCount = Math.random() < 0.5 ? 1 : 2;
+      
+      for (let i = 0; i < moleCount; i++) {
+        const mole = createMole();
+        gameArea.appendChild(mole);
+      }
+
+      const waitTime = Math.random() * 2000 + 1000;
+      setTimeout(spawnMoles, waitTime);
+    }
+
+    // モグラを作る関数
+    function createMole() {
+      const mole = document.createElement('div');
+      mole.className = 'mole';
+
+      const maxX = gameArea.clientWidth - 60;
+      const maxY = gameArea.clientHeight - 70;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      mole.style.left = x + 'px';
+      mole.style.top = y + 'px';
+
+      mole.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (!isGameRunning) return;
+
+        score = score + 1;
+        scoreDisplay.textContent = score;
+
+        mole.classList.add('hit');
+
+        setTimeout(function() {
+          mole.remove();
+        }, 300);
+      });
+
+      setTimeout(function() {
+        if (mole.parentElement) {
+          mole.remove();
+        }
+      }, 1500);
+
+      return mole;
+    }
+
+    // ボタンをクリックしたときの処理を設定
+    startBtn.addEventListener('click', startGame);
+    resetBtn.addEventListener('click', resetGame);
+  </script>
+</body>
+</html>
