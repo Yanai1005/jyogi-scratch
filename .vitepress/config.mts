@@ -24,6 +24,9 @@ export default defineConfig({
         text: 'JavaScriptゲーム',
         items: [
           { text: '講座トップ', link: '/games/javascript/' },
+          { text: 'HTMLの基礎', link: '/games/javascript/basics-html' },
+          { text: 'CSSの基礎', link: '/games/javascript/basics-css' },
+          { text: 'JavaScriptの基礎', link: '/games/javascript/basics-javascript' },
           { text: 'モグラ叩きゲーム', link: '/games/javascript/mogura-tataki' }
         ]
       }
