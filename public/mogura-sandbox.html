@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>モグラ叩きゲーム - コードサンドボックス</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      background: #1e1e1e;
+      color: #fff;
+    }
+
+    .sandbox-container {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      min-height: 400px;
+    }
+
+    .editor-panel {
+      width: 50%;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      border-right: 2px solid #444;
+    }
+
+    .file-tabs {
+      display: flex;
+      background: #252526;
+      border-bottom: 1px solid #444;
+      flex-shrink: 0;
+    }
+
+    .file-tab {
+      padding: 8px 16px;
+      background: #2d2d2d;
+      border: none;
+      color: #969696;
+      cursor: pointer;
+      font-size: 12px;
+      border-right: 1px solid #444;
+      transition: all 0.2s;
+    }
+
+    .file-tab:hover {
+      background: #3c3c3c;
+    }
+
+    .file-tab.active {
+      background: #1e1e1e;
+      color: #fff;
+      border-bottom: 2px solid #007acc;
+    }
+
+    .code-editor {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .code-editor.active {
+      display: flex;
+    }
+
+    .code-editor textarea {
+      flex: 1;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: none;
+      padding: 12px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.4;
+      resize: none;
+      outline: none;
+      tab-size: 2;
+    }
+
+    .preview-panel {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      background: #1e1e1e;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #252526;
+      border-bottom: 1px solid #444;
+      flex-shrink: 0;
+    }
+
+    .preview-header span {
+      color: #969696;
+      font-size: 12px;
+    }
+
+    .run-btn {
+      padding: 5px 14px;
+      background: #0e639c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+
+    .run-btn:hover {
+      background: #1177bb;
+    }
+
+    .preview-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    .preview-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="sandbox-container">
+    <div class="editor-panel">
+      <div class="file-tabs">
+        <button class="file-tab active" data-file="html">index.html</button>
+        <button class="file-tab" data-file="css">style.css</button>
+        <button class="file-tab" data-file="js">script.js</button>
+      </div>
+
+      <div class="code-editor active" id="editor-html">
+        <textarea id="code-html" spellcheck="false"></textarea>
+      </div>
+
+      <div class="code-editor" id="editor-css">
+        <textarea id="code-css" spellcheck="false"></textarea>
+      </div>
+
+      <div class="code-editor" id="editor-js">
+        <textarea id="code-js" spellcheck="false"></textarea>
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <div class="preview-header">
+        <span>プレビュー</span>
+        <button class="run-btn" id="runBtn">▶ 実行</button>
+      </div>
+      <div class="preview-wrapper" id="previewWrapper">
+        <iframe class="preview-frame" id="preview"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script id="default-html" type="text/template">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>モグラ叩きゲーム</title>
+</head>
+<body>
+  <div class="container">
+    <h1>🔨 モグラ叩きゲーム</h1>
+    
+    <div class="game-info">
+      <div class="info-item">
+        <label>スコア:</label>
+        <span id="score">0</span>
+      </div>
+      <div class="info-item">
+        <label>残り時間:</label>
+        <span id="time">30</span>秒
+      </div>
+      <button id="startBtn" class="btn">ゲーム開始</button>
+      <button id="resetBtn" class="btn">リセット</button>
+    </div>
+
+    <div id="gameArea" class="game-area"></div>
+
+    <div id="gameOverMessage" class="game-over-message" style="display: none;">
+      <div class="modal">
+        <h2>🎉 ゲーム終了!</h2>
+        <p id="finalScore"></p>
+        <button onclick="location.reload()">もう一度プレイ</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  </script>
+
+  <script id="default-css" type="text/template">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.container {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.4em;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.info-item {
+  font-size: 0.85em;
+  color: #555;
+}
+
+.info-item span {
+  font-size: 1.1em;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.btn {
+  padding: 6px 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.85em;
+}
+
+.btn:hover {
+  background: #764ba2;
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.game-area {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(180deg, #87ceeb 0%, #90EE90 50%, #8B4513 100%);
+  border: 2px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mole {
+  position: absolute;
+  width: 40px;
+  height: 50px;
+  background: #8b4513;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3em;
+  border: 2px solid #654321;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  transition: transform 0.1s;
+}
+
+.mole:hover {
+  transform: scale(1.1);
+}
+
+.mole.hit {
+  animation: hit 0.3s ease;
+}
+
+@keyframes hit {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.7); opacity: 0.5; }
+  100% { transform: scale(0.5); opacity: 0; }
+}
+
+.game-over-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.modal h2 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.3em;
+}
+
+.modal p {
+  color: #667eea;
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.modal button {
+  padding: 8px 20px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+  </script>
+
+  <script id="default-js" type="text/template">
+// ================================
+// モグラ叩きゲーム
+// ================================
+
+// 変数（Scratchの「変数」と同じ！）
+let score = 0;
+let time = 30;
+let isGameRunning = false;
+let gameTimer = null;
+
+// HTMLの部品を取得
+const scoreDisplay = document.getElementById('score');
+const timeDisplay = document.getElementById('time');
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+const gameArea = document.getElementById('gameArea');
+const gameOverMessage = document.getElementById('gameOverMessage');
+const finalScore = document.getElementById('finalScore');
+
+// ゲームを始める関数
+function startGame() {
+  score = 0;
+  time = 30;
+  isGameRunning = true;
+  
+  scoreDisplay.textContent = '0';
+  timeDisplay.textContent = '30';
+  startBtn.disabled = true;
+  gameArea.innerHTML = '';
+  gameOverMessage.style.display = 'none';
+
+  gameTimer = setInterval(updateTimer, 1000);
+  spawnMoles();
+}
+
+// タイマーを更新
+function updateTimer() {
+  time = time - 1;
+  timeDisplay.textContent = time;
+
+  if (time <= 0) {
+    endGame();
+  }
+}
+
+// ゲーム終了
+function endGame() {
+  isGameRunning = false;
+  clearInterval(gameTimer);
+  startBtn.disabled = false;
+
+  document.querySelectorAll('.mole').forEach(function(mole) {
+    mole.remove();
+  });
+
+  finalScore.textContent = '最終スコア: ' + score + '点';
+  gameOverMessage.style.display = 'flex';
+}
+
+// リセット
+function resetGame() {
+  if (isGameRunning) endGame();
+  score = 0;
+  time = 30;
+  scoreDisplay.textContent = '0';
+  timeDisplay.textContent = '30';
+  startBtn.disabled = false;
+  gameArea.innerHTML = '';
+  gameOverMessage.style.display = 'none';
+}
+
+// モグラを出す
+function spawnMoles() {
+  if (!isGameRunning) return;
+
+  const moleCount = Math.random() < 0.5 ? 1 : 2;
+  
+  for (let i = 0; i < moleCount; i++) {
+    gameArea.appendChild(createMole());
+  }
+
+  setTimeout(spawnMoles, Math.random() * 2000 + 1000);
+}
+
+// モグラを作る
+function createMole() {
+  const mole = document.createElement('div');
+  mole.className = 'mole';
+
+  // 20%でボーナスモグラ（⭐5点）
+  const isBonus = Math.random() < 0.2;
+  if (isBonus) {
+    mole.style.background = 'gold';
+    mole.textContent = '⭐';
+  } else {
+    mole.textContent = '🐹';
+  }
+
+  // ランダムな位置
+  const x = Math.random() * (gameArea.clientWidth - 40);
+  const y = Math.random() * (gameArea.clientHeight - 50);
+  mole.style.left = x + 'px';
+  mole.style.top = y + 'px';
+
+  // クリックで得点
+  mole.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (!isGameRunning) return;
+
+    score += isBonus ? 5 : 1;
+    scoreDisplay.textContent = score;
+    mole.classList.add('hit');
+    setTimeout(function() { mole.remove(); }, 300);
+  });
+
+  // 1.5秒で消える
+  setTimeout(function() {
+    if (mole.parentElement) mole.remove();
+  }, 1500);
+
+  return mole;
+}
+
+// ボタンのイベント設定
+startBtn.addEventListener('click', startGame);
+resetBtn.addEventListener('click', resetGame);
+  </script>
+
+  <script>
+    (function() {
+      var defaultHTML = document.getElementById('default-html').textContent.trim();
+      var defaultCSS = document.getElementById('default-css').textContent.trim();
+      var defaultJS = document.getElementById('default-js').textContent.trim();
+
+      document.getElementById('code-html').value = defaultHTML;
+      document.getElementById('code-css').value = defaultCSS;
+      document.getElementById('code-js').value = defaultJS;
+
+      var tabs = document.querySelectorAll('.file-tab');
+      tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          tabs.forEach(function(t) { t.classList.remove('active'); });
+          this.classList.add('active');
+
+          var file = this.getAttribute('data-file');
+          var editors = document.querySelectorAll('.code-editor');
+          editors.forEach(function(e) { e.classList.remove('active'); });
+          document.getElementById('editor-' + file).classList.add('active');
+        });
+      });
+
+      // コードを実行（iframeを完全にリセット）
+      function runCode() {
+        var html = document.getElementById('code-html').value;
+        var css = document.getElementById('code-css').value;
+        var js = document.getElementById('code-js').value;
+
+        var styleTag = '<style>' + css + '</style>';
+        var scriptTag = '<script>' + js + '</' + 'script>';
+        
+        var fullCode = html.replace('</head>', styleTag + '</head>');
+        fullCode = fullCode.replace('</body>', scriptTag + '</body>');
+
+        // 古いiframeを削除して新しいiframeを作成
+        var wrapper = document.getElementById('previewWrapper');
+        var oldFrame = document.getElementById('preview');
+        if (oldFrame) {
+          oldFrame.remove();
+        }
+
+        var newFrame = document.createElement('iframe');
+        newFrame.id = 'preview';
+        newFrame.className = 'preview-frame';
+        wrapper.appendChild(newFrame);
+
+        // 新しいiframeに書き込む
+        var previewDoc = newFrame.contentDocument || newFrame.contentWindow.document;
+        previewDoc.open();
+        previewDoc.write(fullCode);
+        previewDoc.close();
+      }
+
+      document.getElementById('runBtn').addEventListener('click', runCode);
+      
+      // 初回実行
+      runCode();
+
+      // Tabキーでインデント
+      var textareas = document.querySelectorAll('textarea');
+      textareas.forEach(function(textarea) {
+        textarea.addEventListener('keydown', function(e) {
+          if (e.key === 'Tab') {
+            e.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + '  ' + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 2;
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

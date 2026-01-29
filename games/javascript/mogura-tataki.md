@@ -6,20 +6,11 @@
 > - [CSSの基礎](./basics-css.md)
 > - [JavaScriptの基礎](./basics-javascript.md)
 
-> [!TIP]
-> **完成したゲームで遊んでみよう！**
-> 
-> <a href="/mogura-tataki-demo.html" target="_blank">🎮 デモページでゲームを遊ぶ（新しいタブで開く）</a>
-> 
-> 実際に遊んでみて、どんなゲームを作るのか確認してから始めましょう！
-
 ---
 
-## 今回作るゲーム
+## 🎮 完成したゲームで遊んでみよう！
 
-JavaScriptを使ってモグラ叩きゲームを作ります。Scratchで学んだことを、JavaScriptで表現してみましょう！
-
-### 完成系
+まずは完成版を遊んで、どんなゲームを作るか確認しましょう！
 
 <iframe 
   width="100%" 
@@ -37,11 +28,26 @@ JavaScriptを使ってモグラ叩きゲームを作ります。Scratchで学ん
 
 ---
 
+## 💻 サンドボックスでコードを試そう！
+
+下のエディタで**コードを直接編集**できます。「▶ 実行」ボタンを押すと右側に反映されます！
+
+<iframe 
+  src="/mogura-sandbox.html"
+  style="width:100%; height:550px; border:1px solid #444; border-radius: 8px;"
+></iframe>
+
+> [!TIP]
+> **サンドボックスの使い方**
+> 1. 上部のタブで `index.html`, `style.css`, `script.js` を切り替え
+> 2. コードを自由に編集
+> 3. 「▶ 実行」ボタンで変更を反映
+
+---
+
 ## 準備: フォルダとファイルを作ろう
 
-まず、ゲーム用のフォルダとファイルを作ります。
-
-### フォルダ構成
+自分のパソコンでゲームを作る場合は、以下の構成でファイルを作成します。
 
 ```
 mogura-tataki/
@@ -50,19 +56,11 @@ mogura-tataki/
 └── script.js     (動き)
 ```
 
-### ファイルの作り方
-
-1. デスクトップに「mogura-tataki」という名前のフォルダを作る
-2. そのフォルダの中に、3つのファイルを作る
-   - `index.html`
-   - `style.css`
-   - `script.js`
-
 ---
 
 ## ステップ1: HTMLでゲームの骨組みを作ろう
 
-`index.html` を開いて、以下のコードを書きます。
+`index.html` に以下のコードを書きます。
 
 ```html
 <!DOCTYPE html>
@@ -92,9 +90,7 @@ mogura-tataki/
     </div>
 
     <!-- モグラが出てくる場所 -->
-    <div id="gameArea" class="game-area">
-      <!-- ここにモグラが出てきます -->
-    </div>
+    <div id="gameArea" class="game-area"></div>
 
     <!-- ゲーム終了メッセージ -->
     <div id="gameOverMessage" class="game-over-message" style="display: none;">
@@ -111,37 +107,33 @@ mogura-tataki/
 </html>
 ```
 
-### このコードの説明
+### HTMLの説明
 
-| 部分 | 何をするか |
-|------|----------|
-| `<h1>` | ゲームのタイトル |
-| `<span id="score">` | スコアを表示する場所 |
-| `<span id="time">` | 残り時間を表示する場所 |
+| 部分 | 役割 |
+|------|------|
+| `<span id="score">` | スコアを表示 |
+| `<span id="time">` | 残り時間を表示 |
 | `<button id="startBtn">` | ゲーム開始ボタン |
 | `<div id="gameArea">` | モグラが出てくる場所 |
-| `<div id="gameOverMessage">` | ゲーム終了メッセージ |
 
 > [!TIP]
-> `id="score"` のように、`id` を付けると、JavaScriptからその部分を操作できるようになります！
+> `id="score"` のように `id` を付けると、JavaScriptからその部分を操作できます！
 
 ---
 
 ## ステップ2: CSSで見た目をかっこよくしよう
 
-`style.css` を開いて、以下のコードを書きます。
+`style.css` に以下のコードを書きます。
 
 ```css
-/* 全体の設定 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 背景 */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   display: flex;
@@ -150,7 +142,6 @@ body {
   padding: 20px;
 }
 
-/* ゲーム全体を囲む箱 */
 .container {
   background: white;
   border-radius: 20px;
@@ -160,52 +151,35 @@ body {
   width: 100%;
 }
 
-/* タイトル */
 h1 {
   text-align: center;
   color: #333;
   margin-bottom: 20px;
-  font-size: 2.5em;
 }
 
-/* スコアと時間の表示エリア */
 .game-info {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
-  gap: 15px;
-}
-
-.info-item {
-  font-size: 1.1em;
-  color: #555;
-}
-
-.info-item label {
-  font-weight: bold;
-  color: #333;
+  gap: 10px;
 }
 
 .info-item span {
-  font-size: 1.5em;
+  font-size: 1.3em;
   color: #667eea;
   font-weight: bold;
-  margin: 0 5px;
 }
 
-/* ボタン */
 .btn {
-  padding: 10px 20px;
+  padding: 8px 16px;
   background: #667eea;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1em;
   font-weight: bold;
-  transition: background 0.3s ease;
 }
 
 .btn:hover {
@@ -217,79 +191,45 @@ h1 {
   cursor: not-allowed;
 }
 
-/* ゲームエリア(モグラが出てくる場所) */
 .game-area {
   position: relative;
   width: 100%;
-  height: 400px;
-  background: linear-gradient(180deg, #87ceeb 0%, #e0f6ff 100%);
+  height: 300px;
+  background: linear-gradient(180deg, #87ceeb 0%, #90EE90 50%, #8B4513 100%);
   border: 3px solid #333;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 20px;
 }
 
-/* モグラ */
 .mole {
   position: absolute;
-  width: 60px;
-  height: 70px;
+  width: 50px;
+  height: 60px;
   background: #8b4513;
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   cursor: pointer;
-  user-select: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2em;
-  transition: transform 0.1s;
+  font-size: 1.5em;
   border: 2px solid #654321;
+  transition: transform 0.1s;
 }
 
-/* モグラの目 */
-.mole::before,
-.mole::after {
-  content: '●';
-  position: absolute;
-  font-size: 0.4em;
-  color: black;
-}
-
-.mole::before {
-  left: 15px;
-  top: 15px;
-}
-
-.mole::after {
-  right: 15px;
-  top: 15px;
-}
-
-/* マウスを乗せたとき */
 .mole:hover {
   transform: scale(1.1);
 }
 
-/* 叩かれたときのアニメーション */
 .mole.hit {
   animation: hit 0.3s ease;
 }
 
 @keyframes hit {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.8);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(0.7); opacity: 0.5; }
+  100% { transform: scale(0.5); opacity: 0; }
 }
 
-/* ゲーム終了メッセージ */
 .game-over-message {
   position: fixed;
   top: 0;
@@ -305,257 +245,47 @@ h1 {
 
 .modal {
   background: white;
-  padding: 40px;
+  padding: 30px;
   border-radius: 20px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-}
-
-.modal h2 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 2em;
 }
 
 .modal p {
   color: #667eea;
-  font-size: 1.5em;
-  margin-bottom: 30px;
+  font-size: 1.3em;
+  margin: 15px 0;
   font-weight: bold;
 }
 
 .modal button {
-  padding: 12px 30px;
+  padding: 10px 25px;
   background: #667eea;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1em;
   font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.modal button:hover {
-  background: #764ba2;
 }
 ```
 
 ### CSSのポイント
 
-- **背景**: グラデーションで綺麗な紫色
-- **モグラ**: 茶色の丸い形で、目が付いている
-- **アニメーション**: 叩かれたときに小さくなって消える
+| プロパティ | 効果 |
+|-----------|------|
+| `linear-gradient(...)` | グラデーション背景 |
+| `border-radius` | 角を丸くする |
+| `@keyframes hit` | 叩かれたときのアニメーション |
 
 ---
 
 ## ステップ3: JavaScriptで動きを付けよう
 
-ここが一番大事な部分です！ゆっくり進めていきましょう。
+`script.js` に以下のコードを書きます。これが一番大事な部分です！
 
-`script.js` を開いて、以下のコードを書きます。
-
-### 3-1. ゲームの情報を保存する変数を作る
+### 3-1. 変数とHTML要素の取得
 
 ```javascript
-// ゲームの情報を保存する変数
-// Scratchの「変数」と同じです！
-let score = 0;           // スコア
-let time = 30;           // 残り時間
-let isGameRunning = false;  // ゲームが動いているか
-let gameTimer = null;    // タイマー
-```
-
-### 3-2. HTMLの部品を取得する
-
-```javascript
-// HTMLの部品を取得
-// Scratchの「スプライト」を取得するのと同じです！
-const scoreDisplay = document.getElementById('score');
-const timeDisplay = document.getElementById('time');
-const startBtn = document.getElementById('startBtn');
-const resetBtn = document.getElementById('resetBtn');
-const gameArea = document.getElementById('gameArea');
-const gameOverMessage = document.getElementById('gameOverMessage');
-const finalScore = document.getElementById('finalScore');
-```
-
-> [!NOTE]
-> `document.getElementById('score')` は、HTMLの中から `id="score"` の部分を探して取ってくる命令です。
-
-### 3-3. ゲーム開始の関数を作る
-
-```javascript
-// ゲームを始める関数
-// Scratchの「ブロック定義」と同じです！
-function startGame() {
-  // 変数を初期化(最初の状態に戻す)
-  score = 0;
-  time = 30;
-  isGameRunning = true;
-  
-  // 画面に表示
-  scoreDisplay.textContent = '0';
-  timeDisplay.textContent = '30';
-  startBtn.disabled = true;  // 開始ボタンを押せなくする
-  gameArea.innerHTML = '';   // モグラを全部消す
-  gameOverMessage.style.display = 'none';  // 終了メッセージを隠す
-
-  // タイマーを開始(1秒ごとに updateTimer を実行)
-  gameTimer = setInterval(updateTimer, 1000);
-  
-  // モグラを出し始める
-  spawnMoles();
-}
-```
-
-### 3-4. タイマーを更新する関数
-
-```javascript
-// タイマーを更新する関数
-// Scratchの「ずっと」ブロックの中身と同じです！
-function updateTimer() {
-  time = time - 1;  // 時間を1減らす
-  timeDisplay.textContent = time;  // 画面に表示
-
-  // 時間が0になったらゲーム終了
-  if (time <= 0) {
-    endGame();
-  }
-}
-```
-
-### 3-5. ゲーム終了の関数
-
-```javascript
-// ゲームを終了する関数
-function endGame() {
-  isGameRunning = false;
-  clearInterval(gameTimer);  // タイマーを止める
-  startBtn.disabled = false;  // 開始ボタンを押せるようにする
-
-  // すべてのモグラを消す
-  const allMoles = document.querySelectorAll('.mole');
-  allMoles.forEach(function(mole) {
-    mole.remove();
-  });
-
-  // 最終スコアを表示
-  finalScore.textContent = '最終スコア: ' + score + '点';
-  gameOverMessage.style.display = 'flex';
-}
-```
-
-### 3-6. リセットの関数
-
-```javascript
-// ゲームをリセットする関数
-function resetGame() {
-  if (isGameRunning) {
-    endGame();
-  }
-  score = 0;
-  time = 30;
-  scoreDisplay.textContent = '0';
-  timeDisplay.textContent = '30';
-  startBtn.disabled = false;
-  gameArea.innerHTML = '';
-  gameOverMessage.style.display = 'none';
-}
-```
-
-### 3-7. モグラを出す関数
-
-```javascript
-// モグラを出す関数
-function spawnMoles() {
-  // ゲームが終わっていたら何もしない
-  if (!isGameRunning) return;
-
-  // 1匹か2匹のモグラを出す
-  const moleCount = Math.random() < 0.5 ? 1 : 2;
-  
-  // モグラを作って出す
-  for (let i = 0; i < moleCount; i++) {
-    const mole = createMole();
-    gameArea.appendChild(mole);
-  }
-
-  // 1～3秒後にまたモグラを出す
-  const waitTime = Math.random() * 2000 + 1000;
-  setTimeout(spawnMoles, waitTime);
-}
-```
-
-> [!NOTE]
-> - `Math.random()` は、0から1の間のランダムな数を作ります
-> - `setTimeout(関数, 時間)` は、指定した時間後に関数を実行します
-
-### 3-8. モグラを作る関数
-
-```javascript
-// モグラを作る関数
-function createMole() {
-  // 新しいモグラを作る
-  const mole = document.createElement('div');
-  mole.className = 'mole';
-
-  // ランダムな位置を計算
-  const maxX = gameArea.clientWidth - 60;
-  const maxY = gameArea.clientHeight - 70;
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-
-  // モグラの位置を設定
-  mole.style.left = x + 'px';
-  mole.style.top = y + 'px';
-
-  // クリックされたときの処理
-  mole.addEventListener('click', function(e) {
-    e.stopPropagation();
-    if (!isGameRunning) return;
-
-    // スコアを1増やす
-    score = score + 1;
-    scoreDisplay.textContent = score;
-
-    // 叩かれたアニメーション
-    mole.classList.add('hit');
-
-    // 0.3秒後にモグラを消す
-    setTimeout(function() {
-      mole.remove();
-    }, 300);
-  });
-
-  // 1.5秒後に自動で消える
-  setTimeout(function() {
-    if (mole.parentElement) {
-      mole.remove();
-    }
-  }, 1500);
-
-  return mole;
-}
-```
-
-### 3-9. ボタンにイベントを設定
-
-```javascript
-// ボタンをクリックしたときの処理を設定
-// Scratchの「〇〇が押されたとき」ブロックと同じです！
-startBtn.addEventListener('click', startGame);
-resetBtn.addEventListener('click', resetGame);
-```
-
----
-
-## 完成したコード全体
-
-すべてをまとめた `script.js` の完成形です:
-
-```javascript
-// ゲームの情報を保存する変数
+// ゲームの変数（Scratchの「変数」と同じ！）
 let score = 0;
 let time = 30;
 let isGameRunning = false;
@@ -569,7 +299,11 @@ const resetBtn = document.getElementById('resetBtn');
 const gameArea = document.getElementById('gameArea');
 const gameOverMessage = document.getElementById('gameOverMessage');
 const finalScore = document.getElementById('finalScore');
+```
 
+### 3-2. ゲーム開始・終了・リセット
+
+```javascript
 // ゲームを始める関数
 function startGame() {
   score = 0;
@@ -586,24 +320,22 @@ function startGame() {
   spawnMoles();
 }
 
-// タイマーを更新する関数
+// タイマーを更新
 function updateTimer() {
   time = time - 1;
   timeDisplay.textContent = time;
-
   if (time <= 0) {
     endGame();
   }
 }
 
-// ゲームを終了する関数
+// ゲーム終了
 function endGame() {
   isGameRunning = false;
   clearInterval(gameTimer);
   startBtn.disabled = false;
 
-  const allMoles = document.querySelectorAll('.mole');
-  allMoles.forEach(function(mole) {
+  document.querySelectorAll('.mole').forEach(function(mole) {
     mole.remove();
   });
 
@@ -611,11 +343,9 @@ function endGame() {
   gameOverMessage.style.display = 'flex';
 }
 
-// ゲームをリセットする関数
+// リセット
 function resetGame() {
-  if (isGameRunning) {
-    endGame();
-  }
+  if (isGameRunning) endGame();
   score = 0;
   time = 30;
   scoreDisplay.textContent = '0';
@@ -624,7 +354,11 @@ function resetGame() {
   gameArea.innerHTML = '';
   gameOverMessage.style.display = 'none';
 }
+```
 
+### 3-3. モグラを出す・作る
+
+```javascript
 // モグラを出す関数
 function spawnMoles() {
   if (!isGameRunning) return;
@@ -632,12 +366,10 @@ function spawnMoles() {
   const moleCount = Math.random() < 0.5 ? 1 : 2;
   
   for (let i = 0; i < moleCount; i++) {
-    const mole = createMole();
-    gameArea.appendChild(mole);
+    gameArea.appendChild(createMole());
   }
 
-  const waitTime = Math.random() * 2000 + 1000;
-  setTimeout(spawnMoles, waitTime);
+  setTimeout(spawnMoles, Math.random() * 2000 + 1000);
 }
 
 // モグラを作る関数
@@ -645,47 +377,53 @@ function createMole() {
   const mole = document.createElement('div');
   mole.className = 'mole';
 
-  const maxX = gameArea.clientWidth - 60;
-  const maxY = gameArea.clientHeight - 70;
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
+  // 20%でボーナスモグラ（⭐5点）
+  const isBonus = Math.random() < 0.2;
+  if (isBonus) {
+    mole.style.background = 'gold';
+    mole.textContent = '⭐';
+  } else {
+    mole.textContent = '🐹';
+  }
 
+  // ランダムな位置
+  const x = Math.random() * (gameArea.clientWidth - 50);
+  const y = Math.random() * (gameArea.clientHeight - 60);
   mole.style.left = x + 'px';
   mole.style.top = y + 'px';
 
+  // クリックで得点
   mole.addEventListener('click', function(e) {
     e.stopPropagation();
     if (!isGameRunning) return;
 
-    score = score + 1;
+    score += isBonus ? 5 : 1;
     scoreDisplay.textContent = score;
-
     mole.classList.add('hit');
-
-    setTimeout(function() {
-      mole.remove();
-    }, 300);
+    setTimeout(function() { mole.remove(); }, 300);
   });
 
+  // 1.5秒で消える
   setTimeout(function() {
-    if (mole.parentElement) {
-      mole.remove();
-    }
+    if (mole.parentElement) mole.remove();
   }, 1500);
 
   return mole;
 }
+```
 
-// ボタンをクリックしたときの処理を設定
+### 3-4. ボタンのイベント設定
+
+```javascript
+// ボタンをクリックしたときの処理
+// Scratchの「〇〇が押されたとき」と同じ！
 startBtn.addEventListener('click', startGame);
 resetBtn.addEventListener('click', resetGame);
 ```
 
 ---
 
-## Scratchとの対応表
-
-JavaScriptのコードが、Scratchのどのブロックに対応しているか確認しましょう！
+## 📚 Scratchとの対応表
 
 | Scratch | JavaScript |
 |---------|-----------|
@@ -695,100 +433,59 @@ JavaScriptのコードが、Scratchのどのブロックに対応しているか
 | ずっと | `setInterval(関数, 1000)` |
 | 〇秒待つ | `setTimeout(関数, 時間)` |
 | ブロック定義 | `function 関数名() { ... }` |
-| 〇〇が押されたとき | `ボタン.addEventListener('click', 関数)` |
+| 〇〇が押されたとき | `addEventListener('click', 関数)` |
 | 乱数 | `Math.random()` |
-| スプライトを作る | `document.createElement('div')` |
-| スプライトを削除 | `要素.remove()` |
 
 ---
 
-## ゲームを遊んでみよう！
+## 🚀 チャレンジ: カスタマイズしよう！
 
-1. `index.html` をダブルクリックしてブラウザで開く
-2. 「ゲーム開始」ボタンをクリック
-3. 出てきたモグラをクリックして叩く！
-4. 30秒間でどれだけ叩けるか挑戦！
+上のサンドボックスでコードを編集して試してみよう！
 
----
-
-## もっと楽しくしよう！(発展)
-
-### 1. 難易度を変える
-
-時間を変えてみよう:
+### チャレンジ1: 制限時間を変える
 
 ```javascript
-let time = 60;  // 60秒に変更
+let time = 60;  // 60秒に変更！
 ```
 
-### 2. モグラの色を変える
-
-`style.css` の `.mole` の部分を変更:
+### チャレンジ2: モグラの色を変える
 
 ```css
 .mole {
-  background: gold;  /* 金色のモグラ！ */
+  background: pink;  /* ピンクのモグラ！ */
 }
 ```
 
-### 3. ボーナスモグラを作る
-
-たまに金色のモグラが出て、叩くと5点もらえるようにしてみよう！
-
-`createMole()` 関数の中に追加:
+### チャレンジ3: もっと多くのモグラを出す
 
 ```javascript
-// 20%の確率でボーナスモグラ
-if (Math.random() < 0.2) {
-  mole.style.background = 'gold';
-  mole.dataset.bonus = 'true';
-}
-
-// クリックされたとき
-mole.addEventListener('click', function(e) {
-  e.stopPropagation();
-  if (!isGameRunning) return;
-
-  // ボーナスモグラなら5点、普通なら1点
-  if (mole.dataset.bonus === 'true') {
-    score = score + 5;
-  } else {
-    score = score + 1;
-  }
-  
-  scoreDisplay.textContent = score;
-  // ...
-});
+const moleCount = Math.random() < 0.3 ? 3 : 2;  // 2〜3匹に変更
 ```
 
 ---
 
-## うまく動かないときは
+## 🔧 うまく動かないときは
 
-### モグラが出てこない
-- `startGame()` 関数が呼ばれているか確認
-- ブラウザの「開発者ツール」(F12キー)でエラーがないか確認
+| 症状 | 確認ポイント |
+|------|-------------|
+| モグラが出てこない | `startGame()` が呼ばれているか確認 |
+| クリックしても反応しない | `addEventListener` が正しいか確認 |
+| スコアが増えない | `scoreDisplay.textContent = score;` を確認 |
 
-### クリックしても反応しない
-- `addEventListener` が正しく書けているか確認
-- `script.js` が `index.html` で読み込まれているか確認
-
-### スコアが増えない
-- `score = score + 1;` が書けているか確認
-- `scoreDisplay.textContent = score;` で画面更新しているか確認
+> [!TIP]
+> **デバッグのコツ**: F12キーで開発者ツールを開き、Consoleタブでエラーを確認しよう！
 
 ---
 
-## まとめ
+## 🎉 まとめ
 
-このゲームで学んだこと:
+このゲームで学んだこと：
 
-✅ **変数**: ゲームの情報を保存  
-✅ **関数**: 処理をまとめて整理  
-✅ **イベント**: ボタンクリックに反応  
-✅ **タイマー**: 時間を管理  
-✅ **ランダム**: モグラをランダムな場所に出す  
-✅ **アニメーション**: 叩かれたときの動き  
+✅ **変数** - ゲームの情報を保存  
+✅ **関数** - 処理をまとめて整理  
+✅ **イベント** - ボタンクリックに反応  
+✅ **タイマー** - 時間を管理  
+✅ **ランダム** - モグラをランダムな場所に出す
 
 Scratchで学んだことが、JavaScriptでも使えることが分かりましたね！
 
